@@ -88,7 +88,6 @@ const AppContent = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path='/profile'
             element={

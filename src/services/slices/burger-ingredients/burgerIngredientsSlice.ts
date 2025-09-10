@@ -4,10 +4,7 @@ import { TIngredient } from '@utils-types';
 
 export const getIngredientData = createAsyncThunk(
   'burgerIngredients/getData',
-  async () => {
-    const res = await getIngredientsApi();
-    return res;
-  }
+  getIngredientsApi
 );
 
 interface IngredientsState {
@@ -50,9 +47,18 @@ export const burgerIngredientsSlice = createSlice({
       );
   },
   selectors: {
-    burgerIngredientsSelector: (state) => state
+    burgerIngredientsSelector: (state) => state,
+    bunsSelector: (state) => state.data.filter((item) => item.type === 'bun'),
+    mainsSelector: (state) => state.data.filter((item) => item.type === 'main'),
+    saucesSelector: (state) =>
+      state.data.filter((item) => item.type === 'sauce')
   }
 });
 
 export default burgerIngredientsSlice.reducer;
-export const { burgerIngredientsSelector } = burgerIngredientsSlice.selectors;
+export const {
+  burgerIngredientsSelector,
+  bunsSelector,
+  mainsSelector,
+  saucesSelector
+} = burgerIngredientsSlice.selectors;

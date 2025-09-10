@@ -32,6 +32,7 @@ interface OrderState {
   newOrderData: OrderDetailsState | null;
   ordersHistory: TOrder[];
   modalOrderData: TOrder | null;
+  viewedOrderData: TOrder | null;
   orderRequest: boolean;
   isLoading: boolean;
   error: string | null;
@@ -41,6 +42,7 @@ const initialState: OrderState = {
   newOrderData: orderInitialState,
   ordersHistory: [],
   modalOrderData: null,
+  viewedOrderData: null,
   orderRequest: false,
   isLoading: false,
   error: null
@@ -58,6 +60,9 @@ export const orderSlice = createSlice({
     },
     clearNewOrderData(state) {
       state.newOrderData = null;
+    },
+    clearViewedOrderData(state) {
+      state.viewedOrderData = null;
     }
   },
   extraReducers: (builder) => {
@@ -98,7 +103,7 @@ export const orderSlice = createSlice({
       })
       .addCase(getOrderById.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.modalOrderData = action.payload.orders[0];
+        state.viewedOrderData = action.payload.orders[0];
         state.orderRequest = false;
       })
       .addCase(getOrderById.rejected, (state, action) => {
@@ -111,13 +116,17 @@ export const orderSlice = createSlice({
   selectors: {
     orderSelector: (state) => state,
     ordersHistorySelector: (state) => state.ordersHistory,
-    orderDataByIdSelector: (state) => state.modalOrderData
+    orderDataByIdSelector: (state) => state.viewedOrderData
   }
 });
 
 export const { orderSelector, ordersHistorySelector, orderDataByIdSelector } =
   orderSlice.selectors;
-export const { clearModalData, setModalData, clearNewOrderData } =
-  orderSlice.actions;
+export const {
+  clearModalData,
+  setModalData,
+  clearNewOrderData,
+  clearViewedOrderData
+} = orderSlice.actions;
 
 export default orderSlice.reducer;

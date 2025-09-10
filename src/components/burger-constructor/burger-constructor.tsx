@@ -1,5 +1,5 @@
 import { FC, useMemo } from 'react';
-import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BurgerConstructorUI } from '@ui';
 
 import { useSelector, useDispatch } from '@services/store';
@@ -15,18 +15,22 @@ import { userStateSelector } from '@services/slices/user';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const constructorItems = useSelector(ingredientsSelector);
   const { isAuthed } = useSelector(userStateSelector);
-  const orderIngredientsIds = [
-    constructorItems.bun?._id ?? '',
-    ...constructorItems.ingredients.map((item) => item._id)
-  ];
 
   const orderRequest = useSelector(orderSelector).orderRequest;
   let orderModalData = useSelector(orderSelector).modalOrderData;
 
   const onOrderClick = () => {
-    if (!constructorItems.bun || orderRequest || !isAuthed) return;
+    const orderIngredientsIds = [
+      constructorItems.bun?._id ?? '',
+      ...constructorItems.ingredients.map((item) => item._id)
+    ];
+
+    if (!isAuthed) navigate('/login');
+
+    if (!constructorItems.bun || orderRequest) return;
 
     dispatch(makeNewOrder(orderIngredientsIds))
       .unwrap()
@@ -40,7 +44,7 @@ export const BurgerConstructor: FC = () => {
   };
 
   const price = useMemo(() => {
-    const bunPrice = constructorItems.bun ? constructorItems.bun.price * 2 : 0;
+    const bunPrice = constructorItems.bun ? constructorItems.bun.price : 0;
 
     const ingredientsPrice = constructorItems.ingredients.reduce(
       (s, i) => s + i.price,

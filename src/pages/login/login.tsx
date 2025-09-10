@@ -1,7 +1,7 @@
 import { FC, SyntheticEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from '@services/store';
-import { loginUser } from '@slices/user';
+import { useDispatch, useSelector } from '@services/store';
+import { loginUser, userStateSelector } from '@slices/user';
 import { LoginUI } from '@ui-pages';
 
 export const Login: FC = () => {
@@ -9,6 +9,7 @@ export const Login: FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { error } = useSelector(userStateSelector);
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -23,7 +24,7 @@ export const Login: FC = () => {
 
   return (
     <LoginUI
-      errorText=''
+      errorText={error ?? ''}
       email={email}
       setEmail={setEmail}
       password={password}

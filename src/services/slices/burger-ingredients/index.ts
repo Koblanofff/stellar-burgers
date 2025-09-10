@@ -1,5 +1,8 @@
 export {
   getIngredientData,
   burgerIngredientsSlice,
-  burgerIngredientsSelector
+  burgerIngredientsSelector,
+  bunsSelector,
+  mainsSelector,
+  saucesSelector
 } from './burgerIngredientsSlice';

@@ -13,7 +13,7 @@ export const OrderInfo: FC = () => {
   const { number } = useParams();
   const id = Number(number);
 
-  const orderData = useSelector(orderDataByIdSelector);
+  const viewedOrderData = useSelector(orderDataByIdSelector);
 
   useEffect(() => {
     if (id && !isNaN(id)) {
@@ -25,17 +25,16 @@ export const OrderInfo: FC = () => {
     burgerIngredientsSelector
   ).data;
 
-  /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
-    if (!orderData || !ingredients.length) return null;
+    if (!viewedOrderData || !ingredients.length) return null;
 
-    const date = new Date(orderData.createdAt);
+    const date = new Date(viewedOrderData.createdAt);
 
     type TIngredientsWithCount = {
       [key: string]: TIngredient & { count: number };
     };
 
-    const ingredientsInfo = orderData.ingredients.reduce(
+    const ingredientsInfo = viewedOrderData.ingredients.reduce(
       (acc: TIngredientsWithCount, item) => {
         if (!acc[item]) {
           const ingredient = ingredients.find((ing) => ing._id === item);
@@ -60,12 +59,12 @@ export const OrderInfo: FC = () => {
     );
 
     return {
-      ...orderData,
+      ...viewedOrderData,
       ingredientsInfo,
       date,
       total
     };
-  }, [orderData, ingredients]);
+  }, [viewedOrderData, ingredients]);
 
   if (!orderInfo) {
     return <Preloader />;
